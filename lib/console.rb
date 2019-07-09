@@ -1,10 +1,13 @@
 class Console
   include CodebreakerParatskiy
 
-  attr_accessor :user_name
+  attr_accessor :player_name
+
+  DB = 'stats.yml'.freeze
 
   def initialize
-    @user_name = ''
+    @stats = DbUtils.get(DB)
+    @player_name = ''
     show_welcome
     show_options
   end
@@ -13,25 +16,6 @@ class Console
     @game = Game.new
     @game.run
     registration
-    puts @game.secret_code
-    puts 'Please, enter difficulty level'
-    puts '1. Easy - 15 attempts. 2 hints'
-    puts '2. Medium - 10 attempts. 1 hint'
-    puts '3. Hell - 5 attempts. 1 hint'
-
-    difficulty_level = gets.chomp!.downcase
-
-    case difficulty_level
-    when 'easy'
-      @game.attempts = 15
-      @game.hints = 2
-    when 'medium'
-      @game.attempts = 10
-      @game.hints = 1
-    when 'hell'
-      @game.attempts = 5
-      @game.hints = 1
-    end
 
     loop do
       if @game.attempts.zero?
@@ -59,6 +43,7 @@ class Console
         if result == '++++'
           puts result
           puts 'Congratulations, you are win'
+          save_result?
           show_options
           break
         end
@@ -75,7 +60,27 @@ class Console
 
   def registration
     puts 'Please, enter your name'
-    user_name = gets.chomp!.downcase
+    @player_name = gets.chomp!.downcase
+
+    puts @game.secret_code
+    puts 'Please, enter difficulty level'
+    puts '1. Easy - 15 attempts. 2 hints'
+    puts '2. Medium - 10 attempts. 1 hint'
+    puts '3. Hell - 5 attempts. 1 hint'
+
+    @difficulty_level = gets.chomp!.downcase
+
+    case @difficulty_level
+    when 'easy'
+      @game.attempts = @attempts_total = 15
+      @game.hints = @hints_total = 2
+    when 'medium'
+      @game.attempts = @attempts_total = 10
+      @game.hints = @hints_total = 1
+    when 'hell'
+      @game.attempts = @attempts_total = 5
+      @game.hints = @hints_total = 1
+    end
   end
 
   def run
@@ -124,7 +129,36 @@ class Console
     show_options
   end
 
-  def stats; end
+  def save_result?
+    puts 'Do you want to save the result?'
+    puts 'Yes or No'
+    answer = gets.chomp!.downcase
+    save_result if answer == 'yes'
+  end
+
+  def create_stats
+    {
+      name: @player_name,
+      difficulty: @difficulty_level,
+      attempts_total: @game.attempts,
+      attempts_used: @attempts_total - @game.attempts,
+      hints_total: @game.hints,
+      hints_used: @hints_total - @game.hints
+    }
+  end
+
+  def save_result
+    @stats.push(create_stats)
+    DbUtils.add(DB, @stats)
+  end
+
+  def stats
+    sorted_stats = @stats.sort_by { |player| player[:attempts_total] }.sort_by { |player| player[:attempts_used] }.sort_by { |player| -player[:hints_used] }
+    puts 'name difficulty attempts_total attempts_used hints_total hints_used'
+    sorted_stats.each do |player|
+      puts "#{player[:name]}       #{player[:difficulty]}       #{player[:attempts_total]}       #{player[:attempts_used]}       #{player[:hints_total]}       #{player[:hints_used]}"
+    end
+  end
 
   def exit
     'Goodbye'

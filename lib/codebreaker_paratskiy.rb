@@ -81,13 +81,3 @@ module CodebreakerParatskiy
     end
   end
 end
-
-# puts CodebreakerParatskiy::Game.new([1, 2, 3, 4], [1, 2, 3, 4]).show_result
-# puts CodebreakerParatskiy::Game.new([1, 2, 3, 4], [3, 1, 2,4]).show_result
-# puts CodebreakerParatskiy::Game.new([6, 5, 4, 3], [6, 6, 6, 6]).show_result
-
-# game = CodebreakerParatskiy::Game.new
-
-# game.start
-
-# puts game.secret_code
