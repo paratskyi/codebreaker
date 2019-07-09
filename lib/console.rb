@@ -1,5 +1,3 @@
-require_relative 'codebreaker_paratskiy.rb'
-
 class Console
   include CodebreakerParatskiy
 
@@ -36,7 +34,6 @@ class Console
     end
 
     loop do
-
       if @game.attempts.zero?
         puts 'Sorry, you are lost'
         print @game.secret_code.join
@@ -76,7 +73,7 @@ class Console
     puts @game.give_hint unless @game.hints.zero?
   end
 
-  def registration 
+  def registration
     puts 'Please, enter your name'
     user_name = gets.chomp!.downcase
   end
@@ -133,7 +130,3 @@ class Console
     'Goodbye'
   end
 end
-
-console = Console.new
-
-console.run

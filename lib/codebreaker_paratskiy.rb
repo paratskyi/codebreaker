@@ -13,8 +13,6 @@ module CodebreakerParatskiy
 
       @attempts = 0
       @hints = 0
-
-      
     end
 
     def give_hint
@@ -78,6 +76,7 @@ module CodebreakerParatskiy
       else
         check_the_code(user_code)
       end
+
       "#{@pluses}#{@minuses}#{@spaces}"
     end
   end

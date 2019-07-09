@@ -8,7 +8,7 @@ module CodebreakerParatskiy
         game.run
         expect(game.instance_variable_get(:@secret_code)).not_to be_empty
       end
-      it 'saves 4 numbers secret code' do 
+      it 'saves 4 numbers secret code' do
         game = Game.new
         game.run
         expect(game.instance_variable_get(:@secret_code).length).to eq 4
@@ -33,5 +33,4 @@ module CodebreakerParatskiy
 end
 
 RSpec.describe Console do
-
 end
