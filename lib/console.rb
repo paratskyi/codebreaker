@@ -72,14 +72,20 @@ class Console
 
     case @difficulty_level
     when 'easy'
-      @game.attempts = @attempts_total = 15
-      @game.hints = @hints_total = 2
+      @game.attempts = 15
+      @attempts_total = 15
+      @game.hints = 2
+      @hints_total = 2
     when 'medium'
-      @game.attempts = @attempts_total = 10
-      @game.hints = @hints_total = 1
+      @game.attempts = 10
+      @attempts_total = 10
+      @game.hints = 1
+      @hints_total = 1
     when 'hell'
-      @game.attempts = @attempts_total = 5
-      @game.hints = @hints_total = 1
+      @game.attempts = 5
+      @attempts_total = 5
+      @game.hints = 1
+      @hints_total = 1
     end
   end
 
@@ -140,9 +146,9 @@ class Console
     {
       name: @player_name,
       difficulty: @difficulty_level,
-      attempts_total: @game.attempts,
+      attempts_total: @attempts_total,
       attempts_used: @attempts_total - @game.attempts,
-      hints_total: @game.hints,
+      hints_total: @hints_total,
       hints_used: @hints_total - @game.hints
     }
   end
@@ -153,7 +159,7 @@ class Console
   end
 
   def stats
-    sorted_stats = @stats.sort_by { |player| player[:attempts_total] }.sort_by { |player| player[:attempts_used] }.sort_by { |player| -player[:hints_used] }
+    sorted_stats = @stats.sort_by { |player| player[:attempts_total] }.sort_by { |player| player[:attempts_used] }.sort_by { |player| player[:hints_used] }
     puts 'name difficulty attempts_total attempts_used hints_total hints_used'
     sorted_stats.each do |player|
       puts "#{player[:name]}       #{player[:difficulty]}       #{player[:attempts_total]}       #{player[:attempts_used]}       #{player[:hints_total]}       #{player[:hints_used]}"

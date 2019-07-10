@@ -16,8 +16,8 @@ module CodebreakerParatskiy
     end
 
     def give_hint
-      secret_code.sample unless @hints.zero?
       @hints -= 1
+      @secret_code.sample
     end
 
     def run
@@ -81,3 +81,6 @@ module CodebreakerParatskiy
     end
   end
 end
+
+
+
