@@ -1,6 +1,6 @@
 class Console
   include CodebreakerParatskiy
-
+  include Validating
   attr_accessor :player_name
 
   DB = 'stats.yml'.freeze
@@ -58,9 +58,17 @@ class Console
     puts @game.give_hint unless @game.hints.zero?
   end
 
-  def registration
+  def _get_name
     puts 'Please, enter your name'
     @player_name = gets.chomp!.downcase
+    raise Exceptions::InvalidName if valid_name?(@player_name)
+  rescue Exceptions::InvalidName => e
+    puts e.message
+    registration
+  end
+
+  def registration
+    _get_name
 
     puts @game.secret_code
     puts 'Please, enter difficulty level'
