@@ -29,3 +29,9 @@
   :attempts_used: 2
   :hints_total: 0
   :hints_used: 2
+- :name: asdfg
+  :difficulty: easy
+  :attempts_total: 15
+  :attempts_used: 3
+  :hints_total: 2
+  :hints_used: 0

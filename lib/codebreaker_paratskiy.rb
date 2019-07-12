@@ -76,11 +76,7 @@ module CodebreakerParatskiy
       else
         check_the_code(user_code)
       end
-
       "#{@pluses}#{@minuses}#{@spaces}"
     end
   end
 end
-
-
-
