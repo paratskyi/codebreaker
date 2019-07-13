@@ -1,64 +1,118 @@
 class Console
   include CodebreakerParatskiy
   include Validating
-  attr_accessor :player_name
+  attr_accessor :player_name, :user_code
 
   DB = 'stats.yml'.freeze
+
+  DIFFICULTY = {
+    easy: [15, 2],
+    medium: [10, 1],
+    hell: [5, 1]
+  }.freeze
 
   def initialize
     @stats = DbUtils.get(DB)
     @player_name = ''
+    @user_code = []
     show_welcome
     show_options
   end
 
-  def show_msg(type)
-    puts I18n.t(type)
-  end
-
-  def start
-    @game = Game.new
-    @game.run
-    registration
-
+  def run
     loop do
-      if @game.attempts.zero?
-        show_msg(:Lost)
-        puts @game.secret_code.join
-        show_options
-        break
-      end
-
-      show_msg(:Escort)
       response = user_enter
-
       case response
-      when 'hint' then hint
-      when 'exit'
-        puts I18n.t(:Shure?)
-        is_exit = user_enter
-        self.exit if is_exit == 'yes'
-        redo
-      when /[1-6]+/
-        user_code = response.each_char.map(&:to_i)
-        result = @game.result(user_code)
-        print "#{user_code}, #{@game.secret_code}"
-        if result == '++++'
-          puts result
-          show_msg(:Won)
-          save_result?
-          show_options
-          break
-        end
-        puts result
-        redo unless @game.attempts.zero?
+      when 'exit' then exit
+      when 'rules' then show_rules
+      when 'start' then start
+      when 'stats' then show_stats
       end
     end
   end
 
-  def hint
+  private
+
+  def show_welcome
+    show_msg(:Welcome)
+  end
+
+  def start
+    registration
+    go
+  end
+
+  def show_options
+    show_msg(:Options)
+  end
+
+  def show_rules
+    show_msg(:Rules)
+    show_options
+  end
+
+  def show_stats
+    puts 'name difficulty attempts_total attempts_used hints_total hints_used'
+    sort_stats.each do |player|
+      puts "#{player[:name]}       #{player[:difficulty]}       #{player[:attempts_total]}       #{player[:attempts_used]}       #{player[:hints_total]}       #{player[:hints_used]}"
+    end
+    show_options
+  end
+
+  def go
+    loop do
+      show_msg(:AccompanyingMsg)
+      answer = user_enter
+      response = process_answer(answer)
+      break unless response
+
+      redo if response
+    end
+  end
+
+  def process_answer(answer)
+    case answer
+    when 'hint' then request_of_hint
+    when 'exit' then exit
+    when /[1-6]+/ then check_code(answer)
+    end
+  end
+
+  def request_of_hint
     show_msg(:HintsEnded) if @game.hints.zero?
     puts @game.give_hint unless @game.hints.zero?
+  end
+
+  def check_code(answer)
+    exit if answer == 'exit'
+    result = @game.result(answer)
+    return false if won?(result)
+
+    puts result
+    # print "#{@user_code}, #{@game.secret_code}"
+    return true unless @game.attempts.zero?
+
+    lost
+  end
+
+  def sort_stats
+    @stats.sort_by { |player| [player[:attempts_total], player[:attempts_used], player[:hints_used]] }
+  end
+
+  def generate_stats
+    {
+      name: @player_name,
+      difficulty: @selected_difficulty,
+      attempts_total: @attempts_total,
+      attempts_used: @attempts_total - @game.attempts,
+      hints_total: @hints_total,
+      hints_used: @hints_total - @game.hints
+    }
+  end
+
+  def registration
+    _get_name
+    _get_difficulty_level
   end
 
   def _get_name
@@ -71,64 +125,30 @@ class Console
   end
 
   def _get_difficulty_level
-    puts @game.secret_code ######################## Убрать #######################################
-
     show_msg(:Difficulty)
+    @selected_difficulty = user_enter
+    define_difficulty
+    @game = Game.new(@attempts_total, @hints_total)
+    @game.run
+  end
 
-    @difficulty_level = user_enter
-
-    case @difficulty_level
-    when 'easy'
-      @game.attempts = 15
-      @attempts_total = 15
-      @game.hints = 2
-      @hints_total = 2
-    when 'medium'
-      @game.attempts = 10
-      @attempts_total = 10
-      @game.hints = 1
-      @hints_total = 1
-    when 'hell'
-      @game.attempts = 5
-      @attempts_total = 5
-      @game.hints = 1
-      @hints_total = 1
+  def define_difficulty
+    case @selected_difficulty
+    when 'easy' then @attempts_total, @hints_total = DIFFICULTY[:easy]
+    when 'medium' then @attempts_total, @hints_total = DIFFICULTY[:medium]
+    when 'hell' then @attempts_total, @hints_total = DIFFICULTY[:hell]
     end
   end
 
-  def registration
-    _get_name
-    _get_difficulty_level
-  end
-
-  def run
-    loop do
-      response = user_enter
-      puts response
-      case response
-      when 'exit'
-        exit
-        break
-      when 'rules' then rules
-      when 'start' then start
-      when 'stats'
-        stats
-        redo
-      end
+  def won?(result)
+    if result == '++++'
+      puts result
+      show_msg(:Won)
+      save_result?
+      show_options
+      return true
     end
-  end
-
-  def show_welcome
-    show_msg(:Welcome)
-  end
-
-  def show_options
-    show_msg(:Options)
-  end
-
-  def rules
-    show_msg(:Rules)
-    show_options
+    false
   end
 
   def save_result?
@@ -137,35 +157,28 @@ class Console
     save_result if response == 'yes'
   end
 
-  def create_stats
-    {
-      name: @player_name,
-      difficulty: @difficulty_level,
-      attempts_total: @attempts_total,
-      attempts_used: @attempts_total - @game.attempts,
-      hints_total: @hints_total,
-      hints_used: @hints_total - @game.hints
-    }
-  end
-
   def save_result
-    @stats.push(create_stats)
+    @stats.push(generate_stats)
     DbUtils.add(DB, @stats)
   end
 
-  def stats
-    sorted_stats = @stats.sort_by { |player| player[:attempts_total] }.sort_by { |player| player[:attempts_used] }.sort_by { |player| player[:hints_used] }
-    puts 'name difficulty attempts_total attempts_used hints_total hints_used'
-    sorted_stats.each do |player|
-      puts "#{player[:name]}       #{player[:difficulty]}       #{player[:attempts_total]}       #{player[:attempts_used]}       #{player[:hints_total]}       #{player[:hints_used]}"
-    end
-  end
-
-  def user_enter
-    gets.chomp!.downcase
+  def lost
+    show_msg(:Lost)
+    puts @game.secret_code.join
+    show_options
+    true
   end
 
   def exit
     show_msg(:Exit)
+    abort
+  end
+
+  def show_msg(type)
+    puts I18n.t(type)
+  end
+
+  def user_enter
+    gets.chomp!.downcase
   end
 end

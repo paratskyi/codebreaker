@@ -26,7 +26,7 @@ en:
     - 'An empty space indicates that there is not a current digit in a secret number.'
     - 'If codebreaker inputs the exact number as a secret number - codebreaker wins the game. If all attempts are spent - codebreaker loses.'
     - 'Codebreaker also has some number of hints(depends on chosen difficulty). If a user takes a hint - he receives back a separate digit of the secret code.'
-  Escort: 'Please, enter your code or take hint'
+  AccompanyingMsg: 'Please, enter your code or take hint'
   Won: 'Congratulations, you are win'
   SaveResult:
     - 'Do you want to save the result?'

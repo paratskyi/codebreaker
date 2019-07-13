@@ -8,11 +8,10 @@ module CodebreakerParatskiy
   class Game
     attr_accessor :secret_code, :user_code, :attempts, :hints
 
-    def initialize
+    def initialize(attempts, hints)
       @secret_code = []
-
-      @attempts = 0
-      @hints = 0
+      @attempts = attempts
+      @hints = hints
     end
 
     def give_hint
@@ -22,16 +21,25 @@ module CodebreakerParatskiy
 
     def run
       @secret_code = generate_code
-      @user_code = []
     end
 
     def generate_code
-      Array.new(4) { generate_number }
+      Array.new(4) { rand(1..6) }
     end
 
-    def generate_number
-      rand(1..6)
+    def result(response)
+      user_code = response.each_char.map(&:to_i)
+      @attempts -= 1
+      if @secret_code == user_code
+        return '++++'
+      else
+        check_the_code(user_code)
+      end
+
+      "#{@pluses}#{@minuses}#{@spaces}"
     end
+
+    private
 
     def matches(user_code)
       @matches = []
@@ -67,16 +75,6 @@ module CodebreakerParatskiy
           redo
         end
       end
-    end
-
-    def result(user_code)
-      @attempts -= 1
-      if @secret_code == user_code
-        return '++++'
-      else
-        check_the_code(user_code)
-      end
-      "#{@pluses}#{@minuses}#{@spaces}"
     end
   end
 end
