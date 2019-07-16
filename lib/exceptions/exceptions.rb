@@ -1,6 +1,11 @@
 module Exceptions
   class InvalidName < StandardError
-    def initialize(msg = 'Name must be between 4 and 20 characters. Please, try again')
+    def initialize(msg = I18n.t(:InvalidName))
+      super(msg)
+    end
+  end
+  class InvalidCommand < StandardError
+    def initialize(msg = I18n.t(:InvalidCommand))
       super(msg)
     end
   end

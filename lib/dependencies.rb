@@ -2,6 +2,7 @@ require 'yaml'
 require 'i18n'
 
 require_relative 'i18n'
+require_relative 'config/constants'
 require_relative 'exceptions/exceptions'
 require_relative 'modules/validating'
 require_relative 'codebreaker_paratskiy'

@@ -1,17 +1,20 @@
 require 'codebreaker_paratskiy/version'
-# require 'codebreaker/game'
 require 'pry'
 
 module CodebreakerParatskiy
   class Error < StandardError; end
 
   class Game
-    attr_accessor :secret_code, :user_code, :attempts, :hints
+    attr_accessor :player_name, :secret_code, :user_code, :attempts, :hints, :selected_difficulty
 
-    def initialize(attempts, hints)
-      @secret_code = []
-      @attempts = attempts
-      @hints = hints
+    def initialize(player_name, selected_difficulty)
+      @stats = DbUtils.get(DB)
+      @player_name = player_name
+      @selected_difficulty = selected_difficulty
+      define_difficulty
+      @pluses = ''
+      @minuses = ''
+      @spaces = ''
     end
 
     def give_hint
@@ -30,51 +33,61 @@ module CodebreakerParatskiy
     def result(response)
       user_code = response.each_char.map(&:to_i)
       @attempts -= 1
-      if @secret_code == user_code
-        return '++++'
-      else
-        check_the_code(user_code)
-      end
+      return '++++' if @secret_code == user_code
 
-      "#{@pluses}#{@minuses}#{@spaces}"
+      check_the_code(user_code)
+    end
+
+    def save_result
+      @stats.push(generate_stats)
+      DbUtils.add(DB, @stats)
+    end
+
+    def define_difficulty
+      case @selected_difficulty
+      when 'easy' then @attempts, @hints = DIFFICULTY[:easy]
+      when 'medium' then @attempts, @hints = DIFFICULTY[:medium]
+      when 'hell' then @attempts, @hints = DIFFICULTY[:hell]
+      else return false
+      end
+      @attempts_total = @attempts
+      @hints_total = @hints
     end
 
     private
 
+    def generate_stats
+      {
+        name: @player_name,
+        difficulty: @selected_difficulty,
+        attempts_total: @attempts_total,
+        attempts_used: @attempts_total - @attempts,
+        hints_total: @hints_total,
+        hints_used: @hints_total - @hints
+      }
+    end
+
+    def sort_stats
+      @stats.sort_by { |player| [player[:attempts_total], player[:attempts_used], player[:hints_used]] }
+    end
+
     def matches(user_code)
-      @matches = []
       user_code_clone = user_code.clone
-      @secret_code.each do |number|
-        catch :find_match do
-          user_code_clone.each do |user_number|
-            @matches.push(user_code_clone.delete_at(user_code_clone.index(user_number))) if number == user_number
-            throw :find_match if number == user_number
-          end
+      matches = @secret_code.map do |number|
+        user_code_clone.find do |user_number|
+          user_code_clone.delete_at(user_code_clone.index(user_number)) if user_number == number
         end
       end
-      @matches
+      matches.compact! || matches
     end
 
     def check_the_code(user_code)
-      @pluses = ''
-      @minuses = ''
-      @spaces = ''
-      secret_code_clone = @secret_code.clone
       matches(user_code).each do |match|
-        if secret_code_clone.find_index(match).nil?
-          @minuses += '-'
-          next
-        end
-        if secret_code_clone[secret_code_clone.find_index(match)] == user_code[secret_code_clone.find_index(match)]
-          @pluses += '+'
-          secret_code_clone[secret_code_clone.find_index(match)] = nil
-          user_code[user_code.find_index(match)] = nil
-        else
-          secret_code_clone[secret_code_clone.find_index(match)] = nil
-          user_code[user_code.find_index(match)] = nil
-          redo
-        end
+        @pluses += '+' if secret_code.index(match) == user_code.index(match)
+        @minuses += '-' if secret_code.index(match) != user_code.index(match)
       end
+      (4 - matches(user_code).length).times { @spaces += 'x' }
+      "#{@pluses}#{@minuses}#{@spaces}"
     end
   end
 end

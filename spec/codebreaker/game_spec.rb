@@ -4,17 +4,17 @@ module CodebreakerParatskiy
   RSpec.describe Game do
     describe '#run' do
       it 'generates secret code' do
-        game = Game.new(15, 2)
+        game = Game.new('String', 'hell')
         game.run
         expect(game.instance_variable_get(:@secret_code)).not_to be_empty
       end
       it 'saves 4 numbers secret code' do
-        game = Game.new(15, 2)
+        game = Game.new('String', 'hell')
         game.run
         expect(game.instance_variable_get(:@secret_code).length).to eq 4
       end
       it 'saves secret code with numbers from 1 to 6' do
-        game = Game.new(15, 2)
+        game = Game.new('String', 'hell')
         game.run
         game.instance_variable_get(:@secret_code).each do |number|
           expect(number).to be_between(1, 6).inclusive
@@ -25,10 +25,11 @@ module CodebreakerParatskiy
       #   expect()
       # end
       it 'return result from check secret code and user code' do
-        game = Game.new(15, 2)
-        game.run
+        game = Game.new('String', 'hell')
+        game.define_difficulty
+        # game.run
         game.secret_code = [1, 2, 3, 4]
-        expect(game.result([3, 1, 2, 4])).to eq '+---'
+        expect(game.result('3124')).to eq '+---'
       end
     end
   end
