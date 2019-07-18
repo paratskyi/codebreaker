@@ -47,6 +47,3 @@ module CodebreakerParatskiy
     end
   end
 end
-
-# RSpec.describe Console do
-# end

@@ -1,9 +1,11 @@
+require 'bundler/setup'
+# require 'i18n'
+require 'command_line_reporter'
+require 'yaml'
 require 'simplecov'
 SimpleCov.start
 
-require 'bundler/setup'
-require 'command_line_reporter'
-
+# require_relative '../lib/i18n'
 require_relative '../lib/config/constants'
 require_relative '../lib/exceptions/exceptions'
 require_relative '../lib/modules/validating'

@@ -16,8 +16,8 @@ class Console
     loop do
       answer = user_enter
       response = process_answer_menu(answer)
-      # break if response
       redo unless response
+      break if response
     end
   end
 
@@ -29,8 +29,8 @@ class Console
       show_msg(:AccompanyingMsg)
       answer = user_enter
       response = process_answer_game(answer)
-      # break if response
       redo unless response
+      break if response
     end
   end
 
@@ -40,9 +40,9 @@ class Console
     when 'rules' then show_rules
     when 'start' then start
     when 'stats' then show_stats(sort_stats)
-      # else
-      #   show_msg(:InvalidCommand)
-      #   false
+    else
+      show_msg(:InvalidCommand)
+      false
     end
   end
 
@@ -50,29 +50,24 @@ class Console
     case answer
     when 'hint' then request_of_hint
     when 'exit' then exit
-    when /[1-6]+/ then check_code(answer)
-      # else
-      #   show_msg(:InvalidCommand)
-      #   false
+    when /^[1-6]{4}$/ then check_code(answer)
+    else
+      show_msg(:InvalidCommand)
+      false
     end
   end
 
   def request_of_hint
     show_msg(:HintsEnded) if @game.hints.zero?
     puts @game.give_hint unless @game.hints.zero?
-    true
   end
 
   def check_code(answer)
     exit if answer == 'exit'
     result = @game.result(answer)
     puts result
-    return false if won?(result)
-
-    return true unless @game.attempts.zero?
-
-    loss
-    puts result
+    return won if won?(result)
+    return lost if lost?
   end
 
   def sort_stats
@@ -101,22 +96,27 @@ class Console
   end
 
   def won?(result)
-    if result == '++++'
-      show_msg(:Won)
-      save_result?
-      show_options
-      return true
-    end
-    false
+    result == '++++'
+  end
+
+  def won
+    show_msg(:Won)
+    @game.save_result if save_result?
+    show_options
+    true
   end
 
   def save_result?
     show_msg(:SaveResult)
     response = user_enter
-    @game.save_result if response == 'yes'
+    response == 'yes'
   end
 
-  def loss
+  def lost?
+    @game.attempts.zero?
+  end
+
+  def lost
     show_msg(:Loss)
     puts @game.secret_code.join
     show_options

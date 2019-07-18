@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 2.0', '>= 2.0.2'
+  spec.add_development_dependency 'command_line_reporter', '>=3.0'
   spec.add_development_dependency 'fasterer', '~> 0.1.9'
   spec.add_development_dependency 'i18n', '~> 1.6'
   spec.add_development_dependency 'pry-byebug', '~> 3.7'
