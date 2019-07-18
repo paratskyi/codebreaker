@@ -15,9 +15,8 @@ class Console
     loop do
       answer = user_enter
       response = process_answer_menu(answer)
-      break unless response
-
-      redo if response
+      # break if response
+      redo unless response
     end
   end
 
@@ -29,9 +28,8 @@ class Console
       show_msg(:AccompanyingMsg)
       answer = user_enter
       response = process_answer_game(answer)
-      break unless response
-
-      redo if response
+      # break if response
+      redo unless response
     end
   end
 
@@ -41,9 +39,9 @@ class Console
     when 'rules' then show_rules
     when 'start' then start
     when 'stats' then show_stats(sort_stats)
-    else
-      show_msg(:InvalidCommand)
-      false
+      # else
+      #   show_msg(:InvalidCommand)
+      #   false
     end
   end
 
@@ -52,9 +50,9 @@ class Console
     when 'hint' then request_of_hint
     when 'exit' then exit
     when /[1-6]+/ then check_code(answer)
-    else
-      show_msg(:InvalidCommand)
-      true
+      # else
+      #   show_msg(:InvalidCommand)
+      #   false
     end
   end
 
@@ -67,11 +65,12 @@ class Console
   def check_code(answer)
     exit if answer == 'exit'
     result = @game.result(answer)
+    puts result
     return false if won?(result)
 
     return true unless @game.attempts.zero?
 
-    lost
+    loss
     puts result
   end
 
@@ -102,7 +101,6 @@ class Console
 
   def won?(result)
     if result == '++++'
-      puts result
       show_msg(:Won)
       save_result?
       show_options
@@ -117,8 +115,8 @@ class Console
     @game.save_result if response == 'yes'
   end
 
-  def lost
-    show_msg(:Lost)
+  def loss
+    show_msg(:Loss)
     puts @game.secret_code.join
     show_options
     true

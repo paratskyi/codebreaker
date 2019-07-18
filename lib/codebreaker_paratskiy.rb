@@ -12,9 +12,6 @@ module CodebreakerParatskiy
       @player_name = player_name
       @selected_difficulty = selected_difficulty
       define_difficulty
-      @pluses = ''
-      @minuses = ''
-      @spaces = ''
     end
 
     def give_hint
@@ -31,11 +28,11 @@ module CodebreakerParatskiy
     end
 
     def result(response)
-      user_code = response.each_char.map(&:to_i)
+      @user_code = response.each_char.map(&:to_i)
       @attempts -= 1
       return '++++' if @secret_code == user_code
 
-      check_the_code(user_code)
+      create_response
     end
 
     def save_result
@@ -71,8 +68,8 @@ module CodebreakerParatskiy
       @stats.sort_by { |player| [player[:attempts_total], player[:attempts_used], player[:hints_used]] }
     end
 
-    def matches(user_code)
-      user_code_clone = user_code.clone
+    def matches
+      user_code_clone = @user_code.clone
       matches = @secret_code.map do |number|
         user_code_clone.find do |user_number|
           user_code_clone.delete_at(user_code_clone.index(user_number)) if user_number == number
@@ -81,13 +78,30 @@ module CodebreakerParatskiy
       matches.compact! || matches
     end
 
-    def check_the_code(user_code)
-      matches(user_code).each do |match|
-        @pluses += '+' if secret_code.index(match) == user_code.index(match)
-        @minuses += '-' if secret_code.index(match) != user_code.index(match)
-      end
-      (4 - matches(user_code).length).times { @spaces += 'x' }
+    def create_response
+      @pluses = ''
+      @minuses = ''
+      @spaces = ''
+      check_the_code
       "#{@pluses}#{@minuses}#{@spaces}"
+    end
+
+    def check_the_code
+      @secret_code_clone = @secret_code.clone
+      (4 - matches.length).times { @spaces += ' ' }
+      matches.each do |match|
+        if @user_code[@secret_code_clone.index(match)] == match
+          @pluses += '+'
+        else
+          @minuses += '-'
+        end
+        remove_verified_number(match)
+      end
+    end
+
+    def remove_verified_number(number)
+      @user_code[@user_code.index(number)] = 0
+      @secret_code_clone[@secret_code_clone.index(number)] = 0
     end
   end
 end

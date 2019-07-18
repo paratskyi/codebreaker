@@ -35,7 +35,7 @@ en:
     - 'Are you shure?' 
     - 'Yes or No'
   HintsEnded: 'You used all the hints'
-  Lost: 'Sorry, you are lost'
+  Loss: 'Sorry, you are lost'
   Exit: 'Goodbye'
   InvalidCommand: 'Please enter a command from the options provided'
   InvalidName: 'Name must be a string and between 4 and 20 characters. Please, try again'
