@@ -2,6 +2,7 @@ require 'simplecov'
 SimpleCov.start
 
 require 'bundler/setup'
+require 'command_line_reporter'
 
 require_relative '../lib/config/constants'
 require_relative '../lib/exceptions/exceptions'

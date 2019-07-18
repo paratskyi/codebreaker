@@ -35,18 +35,6 @@
   :attempts_used: 3
   :hints_total: 2
   :hints_used: 0
-- :name: asdf
-  :difficulty: 
-  :attempts_total: 15
-  :attempts_used: 2
-  :hints_total: 2
-  :hints_used: 0
-- :name: asdf
-  :difficulty: 
-  :attempts_total: 15
-  :attempts_used: 1
-  :hints_total: 2
-  :hints_used: 0
 - :name: asdfgh
   :difficulty: hell
   :attempts_total: 5

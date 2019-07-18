@@ -1,5 +1,6 @@
 require 'yaml'
 require 'i18n'
+require 'command_line_reporter'
 
 require_relative 'i18n'
 require_relative 'config/constants'

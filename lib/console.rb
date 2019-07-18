@@ -5,6 +5,7 @@ class Console
   attr_accessor :player_name, :user_code
 
   def initialize
+    @stats = DbUtils.get(DB)
     @player_name = ''
     @user_code = []
     show_welcome

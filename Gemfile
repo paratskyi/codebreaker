@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'bundler', '~> 2.0', '>= 2.0.2'
+gem 'command_line_reporter', '>=3.0'
 gem 'fasterer', '~> 0.1.9'
 gem 'i18n', '~> 1.6'
 gem 'pry-byebug', '~> 3.7'
