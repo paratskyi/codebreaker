@@ -49,5 +49,16 @@ RSpec.describe Game do
     it 'returns number wich contains secret code' do
       expect(game.secret_code).to include(game.give_hint)
     end
+
+    it 'return won if result ++++' do
+      expect(game.won?('++++')).to eq true
+      expect(game.won?('++--')).to eq false
+    end
+
+    it 'return lost if attempts == zero' do
+      expect(game.lost?).to eq false
+      game.attempts = 0
+      expect(game.lost?).to eq true
+    end
   end
 end

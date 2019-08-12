@@ -1,7 +1,7 @@
 # require 'spec_helper'
 
 # RSpec.describe Console do
-#   let(:console) { Console.new }
+#   let(:console) { described_class.new }
 
 #   before do
 #     console.run
