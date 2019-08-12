@@ -1,7 +1,9 @@
 DB = 'stats.yml'.freeze
 
 DIFFICULTY = {
-  easy: [15, 2],
-  medium: [10, 1],
-  hell: [5, 1]
+  easy: { attempts: 15, hints: 2 },
+  medium: { attempts: 10, hints: 1 },
+  hell: { attempts: 5, hints: 1 }
 }.freeze
+
+MAIN_COMMANDS = %w[start rules stats exit].freeze

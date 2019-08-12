@@ -2,20 +2,19 @@ class Console
   include CodebreakerParatskiy
   include Validating
   include Output
-  attr_accessor :player_name, :user_code
+  attr_accessor :user_code, :game
 
   def initialize
-    @stats = DbUtils.get(DB)
-    @player_name = ''
     @user_code = []
-    show_welcome
-    show_options
+    run
   end
 
   def run
+    show_welcome
+    show_options
     loop do
-      answer = user_enter
-      response = process_answer_menu(answer)
+      response = process_answer_menu(user_enter)
+      exit if exit?(response)
       redo unless response
       break if response
     end
@@ -27,19 +26,19 @@ class Console
     registration
     loop do
       show_msg(:AccompanyingMsg)
-      answer = user_enter
-      response = process_answer_game(answer)
+      response = process_answer_game(user_enter)
+      exit if exit?(response)
       redo unless response
       break if response
     end
   end
 
   def process_answer_menu(answer)
+    exit if exit?(answer)
     case answer
-    when 'exit' then exit
     when 'rules' then show_rules
     when 'start' then start
-    when 'stats' then show_stats(sort_stats)
+    when 'stats' then show_stats(Statistic.sort_stats)
     else
       show_msg(:InvalidCommand)
       false
@@ -47,9 +46,9 @@ class Console
   end
 
   def process_answer_game(answer)
+    exit if exit?(answer)
     case answer
     when 'hint' then request_of_hint
-    when 'exit' then exit
     when /^[1-6]{4}$/ then check_code(answer)
     else
       show_msg(:InvalidCommand)
@@ -58,31 +57,29 @@ class Console
   end
 
   def request_of_hint
-    show_msg(:HintsEnded) if @game.hints.zero?
-    puts @game.give_hint unless @game.hints.zero?
+    @game.hints.zero? ? show_msg(:HintsEnded) : (puts @game.give_hint)
   end
 
   def check_code(answer)
-    exit if answer == 'exit'
+    exit if exit?(answer)
     result = @game.result(answer)
     puts result
-    return won if won?(result)
-    return lost if lost?
-  end
-
-  def sort_stats
-    @stats.sort_by { |player| [player[:attempts_total], player[:attempts_used], player[:hints_used]] }
+    return won if @game.won?(result)
+    return lost if @game.lost?
   end
 
   def registration
-    _get_name
-    _get_difficulty_level
+    @game = Game.new(_get_name, _get_difficulty_level)
+    @game.run
   end
 
   def _get_name
     show_msg(:EnterName)
-    @player_name = user_enter
-    raise Exceptions::InvalidName unless valid_name?(@player_name)
+    answer = user_enter
+    exit if exit?(answer)
+    raise Exceptions::InvalidName unless valid_name?(answer)
+
+    answer
   rescue Exceptions::InvalidName => e
     puts e.message
     registration
@@ -90,13 +87,9 @@ class Console
 
   def _get_difficulty_level
     show_msg(:Difficulty)
-    @selected_difficulty = user_enter
-    @game = Game.new(@player_name, @selected_difficulty)
-    @game.run
-  end
-
-  def won?(result)
-    result == '++++'
+    answer = user_enter
+    exit if exit?(answer)
+    answer
   end
 
   def won
@@ -108,12 +101,8 @@ class Console
 
   def save_result?
     show_msg(:SaveResult)
-    response = user_enter
-    response == 'yes'
-  end
-
-  def lost?
-    @game.attempts.zero?
+    answer = user_enter
+    answer == 'yes'
   end
 
   def lost
@@ -125,10 +114,14 @@ class Console
 
   def exit
     show_msg(:Exit)
-    abort
+    exit
   end
 
   def user_enter
     gets.chomp!.downcase
+  end
+
+  def exit?(answer)
+    answer == 'exit'
   end
 end
