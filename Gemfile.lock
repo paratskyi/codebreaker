@@ -21,7 +21,7 @@ GEM
       descendants_tracker (~> 0.0.1)
     colored (1.2)
     colorize (0.8.1)
-    command_line_reporter (4.0.0)
+    command_line_reporter (3.3.6)
       colored (>= 1.2)
     concurrent-ruby (1.1.5)
     descendants_tracker (0.0.4)
@@ -133,7 +133,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 2.0, >= 2.0.2)
   codebreaker_paratskiy!
-  command_line_reporter (>= 3.0)
+  command_line_reporter (~> 3.0)
   fasterer (~> 0.1.9)
   i18n (~> 1.6)
   pry-byebug (~> 3.7)

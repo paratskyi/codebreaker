@@ -2,11 +2,10 @@ class Game
   attr_accessor :player_name, :secret_code, :user_code, :attempts, :hints, :difficulty, :attempts_total, :hints_total
 
   def initialize(player_name, difficulty)
-    @stats = DbUtils.get(DB)
+    @stats = Statistic.stats
     @player_name = player_name
     @difficulty = difficulty
     define_difficulty
-    puts self.player_name
   end
 
   def give_hint
@@ -16,6 +15,7 @@ class Game
 
   def run
     @secret_code = generate_code
+    puts @secret_code
   end
 
   def generate_code

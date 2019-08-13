@@ -1,4 +1,4 @@
-require_relative 'codebreaker_paratskiy'
+# require_relative 'codebreaker_paratskiy'
 require_relative '../dependencies'
 
 module LoadGame
@@ -6,6 +6,5 @@ module LoadGame
     Console.new.run
   end
 end
-
 
 LoadGame.start
