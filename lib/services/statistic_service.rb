@@ -8,14 +8,6 @@ module Statistic
       hints_total: DIFFICULTY[game.difficulty][:hints],
       hints_used: DIFFICULTY[game.difficulty][:hints] - game.hints
     }
-    # {
-    #   name: game.player_name,
-    #   difficulty: game.difficulty,
-    #   attempts_total: game.attempts_total,
-    #   attempts_used: game.attempts_total - game.attempts,
-    #   hints_total: game.hints_total,
-    #   hints_used: game.hints_total - game.hints
-    # }
   end
 
   def self.sort_stats

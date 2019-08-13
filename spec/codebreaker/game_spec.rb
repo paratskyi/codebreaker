@@ -1,4 +1,5 @@
-require 'spec_helper'
+# require 'spec_helper'
+require_relative '../../dependencies'
 
 RSpec.describe Game do
   let(:game) { described_class.new('String', 'hell') }

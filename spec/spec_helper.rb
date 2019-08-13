@@ -1,3 +1,4 @@
+require 'i18n'
 require 'simplecov'
 
 SimpleCov.start

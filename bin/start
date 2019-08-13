@@ -2,7 +2,7 @@
 
 require 'bundler/setup'
 require 'codebreaker_paratskiy'
-require_relative '../lib/index'
+
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
 
@@ -13,4 +13,4 @@ require_relative '../lib/index'
 # require 'irb'
 # IRB.start(__FILE__)
 
-Console.start
+LoadGame.start

@@ -114,7 +114,7 @@ class Console
 
   def exit
     show_msg(:Exit)
-    exit
+    abort
   end
 
   def user_enter

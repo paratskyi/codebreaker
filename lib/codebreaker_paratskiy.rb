@@ -1,7 +1,6 @@
 require 'codebreaker_paratskiy/version'
 require 'pry'
-
-require_relative '../dependencies.rb'
+require_relative '../dependencies'
 
 module CodebreakerParatskiy
 end
