@@ -1,5 +1,5 @@
 # require_relative 'codebreaker_paratskiy'
-require_relative '../dependencies'
+# require_relative '../dependencies'
 
 module LoadGame
   def self.start
@@ -7,4 +7,4 @@ module LoadGame
   end
 end
 
-LoadGame.start
+# LoadGame.start

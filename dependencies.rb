@@ -4,7 +4,7 @@ require 'command_line_reporter'
 require 'pry'
 
 require_relative 'lib/config/constants'
-require_relative 'lib/i18n'
+require_relative 'lib/i18n_config'
 require_relative 'lib/error'
 require_relative 'lib/services/matching_service'
 require_relative 'lib/services/statistic_service'
