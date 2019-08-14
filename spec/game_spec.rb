@@ -1,11 +1,23 @@
 require 'spec_helper'
 
 RSpec.describe Game do
-  let(:game) { described_class.new('String', 'hell') }
+  let(:game) { described_class.new('String', DIFFICULTIES[:hell]) }
 
   before do
     game.run
-    game.define_difficulty
+  end
+
+  describe '#create' do
+    context 'with all of difficulty' do
+      it do
+        DIFFICULTIES.each_value do |difficult|
+          current_game = described_class.new('Name', difficult)
+          expect(current_game.attempts).to eq difficult[:attempts]
+          expect(current_game.hints).to eq difficult[:hints]
+          expect(current_game.difficulty_name).to eq DIFFICULTIES.key(difficult).to_s
+        end
+      end
+    end
   end
 
   context '#run' do
@@ -19,24 +31,6 @@ RSpec.describe Game do
       game.instance_variable_get(:@secret_code).each do |number|
         expect(number).to be_between(1, 6).inclusive
       end
-    end
-    it 'defines easy difficulty' do
-      game.difficulty = 'easy'
-      game.define_difficulty
-      expect(game.attempts).to eq 15
-      expect(game.hints).to eq 2
-    end
-    it 'defines medium difficulty' do
-      game.difficulty = 'medium'
-      game.define_difficulty
-      expect(game.attempts).to eq 10
-      expect(game.hints).to eq 1
-    end
-    it 'defines hell difficulty' do
-      game.difficulty = 'hell'
-      game.define_difficulty
-      expect(game.attempts).to eq 5
-      expect(game.hints).to eq 1
     end
   end
 
