@@ -1,9 +1,14 @@
 DB = 'stats.yml'.freeze
 
-DIFFICULTY = {
+DIFFICULTIES = {
   easy: { attempts: 15, hints: 2 },
   medium: { attempts: 10, hints: 1 },
   hell: { attempts: 5, hints: 1 }
 }.freeze
 
-MAIN_COMMANDS = %w[start rules stats exit].freeze
+MAIN_MENU_COMMANDS = {
+  'start' => :start,
+  'rules' => :show_rules,
+  'stats' => :show_stats,
+  'exit' => :exit
+}.freeze

@@ -6,54 +6,42 @@ class Console
 
   def initialize
     @user_code = []
-    run
   end
 
   def run
     show_welcome
-    show_options
-    loop do
-      response = process_answer_menu(user_enter)
-      exit if exit?(response)
-      redo unless response
-      break if response
-    end
+    main_menu
   end
 
-  private
+  def main_menu
+    show_main_menu
+    answer = user_enter
+    return process_answer_menu(answer) if MAIN_MENU_COMMANDS.include?(answer)
+
+    show_msg(:InvalidCommand)
+    main_menu
+  end
 
   def start
     registration
     loop do
+      return lost if @game.lost?
+
       show_msg(:AccompanyingMsg)
-      response = process_answer_game(user_enter)
-      exit if exit?(response)
-      redo unless response
-      break if response
+      answer = user_enter
+      case answer
+      when 'hint', /^[1-6]{4}$/
+        return won if @game.won?(check_code(answer))
+      else
+        show_msg(:InvalidCommand)
+        redo
+      end
     end
   end
 
   def process_answer_menu(answer)
-    exit if exit?(answer)
-    case answer
-    when 'rules' then show_rules
-    when 'start' then start
-    when 'stats' then show_stats(Statistic.sort_stats)
-    else
-      show_msg(:InvalidCommand)
-      false
-    end
-  end
-
-  def process_answer_game(answer)
-    exit if exit?(answer)
-    case answer
-    when 'hint' then request_of_hint
-    when /^[1-6]{4}$/ then check_code(answer)
-    else
-      show_msg(:InvalidCommand)
-      false
-    end
+    send(MAIN_MENU_COMMANDS[answer])
+    main_menu if answer != 'start'
   end
 
   def request_of_hint
@@ -61,11 +49,9 @@ class Console
   end
 
   def check_code(answer)
-    exit if exit?(answer)
     result = @game.result(answer)
     puts result
-    return won if @game.won?(result)
-    return lost if @game.lost?
+    result
   end
 
   def registration
@@ -76,7 +62,7 @@ class Console
   def _get_name
     show_msg(:EnterName)
     answer = user_enter
-    exit if exit?(answer)
+
     raise Exceptions::InvalidName unless valid_name?(answer)
 
     answer
@@ -88,15 +74,10 @@ class Console
   def _get_difficulty_level
     show_msg(:Difficulty)
     answer = user_enter
-    exit if exit?(answer)
-    answer
-  end
+    return DIFFICULTIES[answer.to_sym] if DIFFICULTIES.include?(answer.to_sym)
 
-  def won
-    show_msg(:Won)
-    @game.save_result if save_result?
-    show_options
-    true
+    show_msg(:InvalidCommand)
+    _get_difficulty_level
   end
 
   def save_result?
@@ -105,20 +86,22 @@ class Console
     answer == 'yes'
   end
 
+  def won
+    show_msg(:Won)
+    @game.save_result if save_result?
+    main_menu
+  end
+
   def lost
     show_msg(:Loss)
     puts @game.secret_code.join
-    show_options
-    true
-  end
-
-  def exit
-    show_msg(:Exit)
-    abort
+    main_menu
   end
 
   def user_enter
-    gets.chomp!.downcase
+    enter = gets.chomp!.downcase
+    exit if exit?(enter)
+    enter
   end
 
   def exit?(answer)

@@ -3,11 +3,11 @@ module Statistic
     puts game.difficulty
     {
       name: game.player_name,
-      difficulty: game.difficulty,
-      attempts_total: DIFFICULTY[game.difficulty.to_sym][:attempts],
-      attempts_used: DIFFICULTY[game.difficulty.to_sym][:attempts] - game.attempts,
-      hints_total: DIFFICULTY[game.difficulty.to_sym][:hints],
-      hints_used: DIFFICULTY[game.difficulty.to_sym][:hints] - game.hints
+      difficulty: game.difficulty_name,
+      attempts_total: DIFFICULTIES[game.difficulty.to_sym][:attempts],
+      attempts_used: DIFFICULTIES[game.difficulty.to_sym][:attempts] - game.attempts,
+      hints_total: DIFFICULTIES[game.difficulty.to_sym][:hints],
+      hints_used: DIFFICULTIES[game.difficulty.to_sym][:hints] - game.hints
     }
   end
 

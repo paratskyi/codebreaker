@@ -1,4 +1,3 @@
-require: rubocop-rspec
 speedups:
   rescue_vs_respond_to: true
   module_eval: true

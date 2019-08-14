@@ -5,7 +5,7 @@ module Output
     show_msg(:Welcome)
   end
 
-  def show_options
+  def show_main_menu
     show_msg(:Options)
   end
 
@@ -13,7 +13,7 @@ module Output
     show_msg(:Rules)
   end
 
-  def show_stats(sorted_stats)
+  def show_stats(sorted_stats = Statistic.sort_stats)
     table(border: true) do
       generate_table_titles
       generate_table_values(sorted_stats)
