@@ -13,6 +13,7 @@ RSpec.describe Game do
         DIFFICULTIES.each_value do |difficult|
           current_game = described_class.new('Name', difficult)
           expect(current_game.attempts).to eq difficult[:attempts]
+          
           expect(current_game.hints).to eq difficult[:hints]
           expect(current_game.difficulty_name).to eq DIFFICULTIES.key(difficult).to_s
         end

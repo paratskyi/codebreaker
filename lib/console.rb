@@ -24,18 +24,24 @@ class Console
 
   def start
     registration
+    game_scenario
+  end
+
+  def game_scenario
     loop do
       return lost if @game.lost?
 
       show_msg(:AccompanyingMsg)
-      answer = user_enter
-      case answer
-      when 'hint', /^[1-6]{4}$/
-        return won if @game.won?(check_code(answer))
-      else
-        show_msg(:InvalidCommand)
-        redo
-      end
+      process_answer_game(user_enter)
+    end
+  end
+
+  def process_answer_game(answer)
+    case answer
+    when /^[1-6]{4}$/
+      return won if @game.won?(check_code(answer))
+    when 'hint' then request_of_hint
+    else show_msg(:InvalidCommand)
     end
   end
 
@@ -82,8 +88,7 @@ class Console
 
   def save_result?
     show_msg(:SaveResult)
-    answer = user_enter
-    answer == 'yes'
+    user_enter == 'yes'
   end
 
   def won

@@ -2,32 +2,52 @@ require 'spec_helper'
 
 RSpec.describe Console do
   let(:console) { described_class.new }
+  let(:game) { Game.new('test', DIFFICULTIES[:easy]) }
 
-  describe '#run' do
+  describe '#main_menu' do
     context 'when correct method calling' do
-      after do
-        console.run
+      before do
+        allow(console).to receive(:_get_name).and_return('test')
+        allow(console).to receive(:_get_difficulty_level) { DIFFICULTIES[:easy] }
+        allow(console).to receive(:user_enter).and_return('1234')
+        allow(console).to receive(:loop).and_yield
       end
 
       it 'start' do
-        allow(console).to receive(:user_enter).and_return('start')
-        expect(console).to receive(:start)
+        expect(console).to receive(:show_msg).with(:AccompanyingMsg)
+        expect(console).to receive(:start).and_call_original
+        console.start
       end
 
       it 'rules' do
-        allow(console).to receive(:user_enter).and_return('rules')
-        expect(console).to receive(:rules)
+        expect(console).to receive(:show_msg).with(:Rules)
+        expect(console).to receive(:show_rules).and_call_original
+        console.show_rules
       end
 
       it 'stats' do
-        allow(console).to receive(:user_enter).and_return('stats')
-        expect(console).to receive(:stats)
+        # expect(console).to receive(:show_msg).with(:Rules)
+        # console.show_stats
       end
 
       it 'exit' do
-        allow(console).to receive(:user_enter).and_return('exit')
-        expect(console).to receive(:exit)
+        expect(console).to receive(:show_msg).with(:Exit)
         exit
+      end
+    end
+
+    context 'when hint' do
+      before do
+        allow(console).to receive(:_get_name).and_return('test')
+        allow(console).to receive(:_get_difficulty_level) { DIFFICULTIES[:easy] }
+        allow(console).to receive(:user_enter).and_return('hint')
+        allow(console).to receive(:loop).and_yield
+      end
+
+      it 'take hint' do
+        # binding.pry
+        expect(console).to receive(:show_msg).with(:AccompanyingMsg)
+        expect(console.request_of_hint).to receive(:puts).with()
       end
     end
   end
