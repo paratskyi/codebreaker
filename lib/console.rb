@@ -17,10 +17,12 @@ class Console
     show_main_menu
     answer = user_enter
     return process_answer_menu(answer) if MAIN_MENU_COMMANDS.include?(answer)
-
+    
     show_msg(:InvalidCommand)
     main_menu
   end
+  
+  private
 
   def start
     registration
@@ -69,16 +71,20 @@ class Console
     show_msg(:EnterName)
     answer = user_enter
 
-    raise Exceptions::InvalidName unless valid_name?(answer)
+    return answer if valid_name?(answer)
 
-    answer
-  rescue Exceptions::InvalidName => e
-    puts e.message
-    registration
+    show_msg(:InvalidCommand)
+    _get_name
+  #   raise Exceptions::InvalidName unless valid_name?(answer)
+
+  #   answer
+  # rescue Exceptions::InvalidName => e
+  #   puts e.message
+  #   _get_name
   end
 
   def _get_difficulty_level
-    show_msg(:Difficulty)
+    show_msg(:EnterDifficulty)
     answer = user_enter
     return DIFFICULTIES[answer.to_sym] if DIFFICULTIES.include?(answer.to_sym)
 
@@ -104,8 +110,11 @@ class Console
   end
 
   def user_enter
-    enter = gets.chomp!.downcase
-    exit if exit?(enter)
+    enter = gets.chomp.downcase
+    if exit?(enter)
+      show_msg(:Exit)
+      exit
+    end
     enter
   end
 

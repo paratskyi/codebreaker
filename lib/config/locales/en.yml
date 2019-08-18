@@ -1,13 +1,13 @@
 en:
   Welcome: 'Welcome to codebreaker game'
-  Options: 
+  MainMenu: 
     - 'Choose from propose options what do you want to do'
     - '1. Start'
     - '2. Rules'
     - '3. Stats'
     - '4. Exit'
   EnterName: 'Please, enter your name'
-  Difficulty: 
+  EnterDifficulty: 
     - 'Please, enter difficulty level'
     - '1. Easy - 15 attempts. 2 hints'
     - '2. Medium - 10 attempts. 1 hint'

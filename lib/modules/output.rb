@@ -6,7 +6,7 @@ module Output
   end
 
   def show_main_menu
-    show_msg(:Options)
+    show_msg(:MainMenu)
   end
 
   def show_rules
