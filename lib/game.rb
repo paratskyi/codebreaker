@@ -27,7 +27,7 @@ class Game
     @attempts -= 1
     return '++++' if @secret_code == user_code
 
-    create_response
+    Matching.create_response(self)
   end
 
   def save_result
@@ -41,33 +41,5 @@ class Game
 
   def lost?
     attempts.zero?
-  end
-
-  private
-
-  def create_response
-    @pluses = ''
-    @minuses = ''
-    @spaces = ''
-    check_the_code
-    "#{@pluses}#{@minuses}#{@spaces}"
-  end
-
-  def check_the_code
-    @secret_code_clone = @secret_code.clone
-    (4 - Matching.matches(self).length).times { @spaces += ' ' }
-    Matching.matches(self).each do |match|
-      if @user_code[@secret_code_clone.index(match)] == match
-        @pluses += '+'
-      else
-        @minuses += '-'
-      end
-      remove_verified_number(match)
-    end
-  end
-
-  def remove_verified_number(number)
-    @user_code[@user_code.index(number)] = 0
-    @secret_code_clone[@secret_code_clone.index(number)] = 0
   end
 end

@@ -8,4 +8,30 @@ module Matching
     end
     matches.compact! || matches
   end
+
+  def self.create_response(game)
+    @pluses = ''
+    @minuses = ''
+    @spaces = ''
+    check_the_code(game)
+    "#{@pluses}#{@minuses}#{@spaces}"
+  end
+
+  def self.check_the_code(game)
+    @secret_code_clone = game.secret_code.clone
+    (4 - matches(game).length).times { @spaces += ' ' }
+    matches(game).each do |match|
+      if game.user_code[@secret_code_clone.index(match)] == match
+        @pluses += '+'
+      else
+        @minuses += '-'
+      end
+      remove_verified_number(match, game)
+    end
+  end
+
+  def self.remove_verified_number(number, game)
+    game.user_code[game.user_code.index(number)] = 0
+    @secret_code_clone[@secret_code_clone.index(number)] = 0
+  end
 end

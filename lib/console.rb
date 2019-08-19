@@ -17,11 +17,11 @@ class Console
     show_main_menu
     answer = user_enter
     return process_answer_menu(answer) if MAIN_MENU_COMMANDS.include?(answer)
-    
+
     show_msg(:InvalidCommand)
     main_menu
   end
-  
+
   private
 
   def start
@@ -75,12 +75,12 @@ class Console
 
     show_msg(:InvalidCommand)
     _get_name
-  #   raise Exceptions::InvalidName unless valid_name?(answer)
+    #   raise Exceptions::InvalidName unless valid_name?(answer)
 
-  #   answer
-  # rescue Exceptions::InvalidName => e
-  #   puts e.message
-  #   _get_name
+    #   answer
+    # rescue Exceptions::InvalidName => e
+    #   puts e.message
+    #   _get_name
   end
 
   def _get_difficulty_level

@@ -86,18 +86,18 @@ RSpec.describe Console do
     end
 
     context 'when incorrect user enter' do
+      it 'should show message Invalid enter when name.length < 4' do
+        allow(console).to receive(:user_enter).and_return('asd', 'test')
+        expect(console).to receive(:show_msg).with(:EnterName).twice
+        expect(console).to receive(:show_msg).with(:InvalidCommand).once
+        console.send(:_get_name)
+      end
 
-      it 'should rescue InvalidName exception' do
-        # incorrect_names.each do |incorrect_name|
-          allow(console).to receive(:user_enter).and_return('asd', 'asdf')
-          expect(console).to receive(:show_msg).with(:EnterName).twice
-          expect(console).to receive(:show_msg).with(:InvalidCommand).once
-
-          # expect { console.send(:_get_name) }.to raise_error
-          # expect(console).to receive(:show_msg).with(:InvalidCommand)
-
-          console.send(:_get_name)
-        # end
+      it 'should show message Invalid enter when name.length > 20' do
+        allow(console).to receive(:user_enter).and_return('a' * 21, 'test')
+        expect(console).to receive(:show_msg).with(:EnterName).twice
+        expect(console).to receive(:show_msg).with(:InvalidCommand).once
+        console.send(:_get_name)
       end
 
       it 'should show message Invalid enter' do
@@ -108,4 +108,14 @@ RSpec.describe Console do
       end
     end
   end
+
+  # describe '#won' do
+  #   context 'when save result' do
+  #     it 'should save result if user_enter = yes' do
+  #       allow(console).to receive(:user_enter).and_return('yes', 'no')
+  #       expect(console).to receive(:show_msg).with(:SaveResult).twice
+
+  #     end
+  #   end
+  # end
 end
