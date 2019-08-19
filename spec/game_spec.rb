@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe Game do
   let(:game) { described_class.new('String', DIFFICULTIES[:hell]) }
-
+  
   before do
     game.run
   end
