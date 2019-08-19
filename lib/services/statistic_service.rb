@@ -1,13 +1,12 @@
 module Statistic
   def self.generate_stats(game)
-    puts game.difficulty
     {
       name: game.player_name,
       difficulty: game.difficulty_name,
-      attempts_total: DIFFICULTIES[game.difficulty.to_sym][:attempts],
-      attempts_used: DIFFICULTIES[game.difficulty.to_sym][:attempts] - game.attempts,
-      hints_total: DIFFICULTIES[game.difficulty.to_sym][:hints],
-      hints_used: DIFFICULTIES[game.difficulty.to_sym][:hints] - game.hints
+      attempts_total: DIFFICULTIES[game.difficulty_name.to_sym][:attempts],
+      attempts_used: DIFFICULTIES[game.difficulty_name.to_sym][:attempts] - game.attempts,
+      hints_total: DIFFICULTIES[game.difficulty_name.to_sym][:hints],
+      hints_used: DIFFICULTIES[game.difficulty_name.to_sym][:hints] - game.hints
     }
   end
 

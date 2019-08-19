@@ -21,7 +21,7 @@ module Matching
     @secret_code_clone = game.secret_code.clone
     (4 - matches(game).length).times { @spaces += ' ' }
     matches(game).each do |match|
-      if game.user_code[@secret_code_clone.index(match)] == match
+      if @secret_code_clone[game.user_code.index(match)] == match
         @pluses += '+'
       else
         @minuses += '-'

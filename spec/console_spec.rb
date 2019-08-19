@@ -70,7 +70,6 @@ RSpec.describe Console do
   end
 
   describe '#registration' do
-    let(:incorrect_names) { %w[qwe qwertyuiopasdfghjklz] }
     context 'when correct user enter' do
       it 'should return name' do
         allow(console).to receive(:user_enter).and_return('test')
@@ -110,11 +109,27 @@ RSpec.describe Console do
   end
 
   # describe '#won' do
-  #   context 'when save result' do
+  #   context 'when won' do
   #     it 'should save result if user_enter = yes' do
-  #       allow(console).to receive(:user_enter).and_return('yes', 'no')
-  #       expect(console).to receive(:show_msg).with(:SaveResult).twice
+  #       console.instance_variable_set(:@game, game)
+  #       expect(console).to receive(:show_msg).with(:Won)
+  #       expect(console).to receive(:show_msg).with(:SaveResult)
+  #       allow(console).to receive(:user_enter).and_return('yes')
+  #       expect(console).to receive(:show_msg).with(:MainMenu)
+  #       console.send(:won)
+  #     end
+  #   end
+  # end
 
+  # describe '#lost' do
+  #   context 'when loss' do
+  #     it 'show loss message when loss' do
+  #       game.instance_variable_set(:@secret_code, [1, 2, 3, 4])
+  #       console.instance_variable_set(:@game, game)
+  #       expect(console).to receive(:show_msg).with(:Loss)
+  #       expect(console).to receive(:puts).with('1234')
+  #       expect(console).to receive(:show_msg).with(:MainMenu)
+  #       console.send(:lost)
   #     end
   #   end
   # end

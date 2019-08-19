@@ -75,12 +75,6 @@ class Console
 
     show_msg(:InvalidCommand)
     _get_name
-    #   raise Exceptions::InvalidName unless valid_name?(answer)
-
-    #   answer
-    # rescue Exceptions::InvalidName => e
-    #   puts e.message
-    #   _get_name
   end
 
   def _get_difficulty_level
