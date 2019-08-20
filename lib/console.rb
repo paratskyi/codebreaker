@@ -16,6 +16,7 @@ class Console
   def main_menu
     show_main_menu
     answer = user_enter
+    # binding.pry
     return process_answer_menu(answer) if MAIN_MENU_COMMANDS.include?(answer)
 
     show_msg(:InvalidCommand)

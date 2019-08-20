@@ -1,12 +1,13 @@
 class Game
   attr_accessor :player_name, :secret_code, :user_code, :attempts, :hints, :difficulty_name
-
+  attr_reader :stats
   def initialize(player_name, difficulty)
     @stats = Statistic.stats
     @player_name = player_name
     @difficulty_name = DIFFICULTIES.key(difficulty).to_s
     @attempts = difficulty[:attempts]
     @hints = difficulty[:hints]
+    @db = DB
   end
 
   def give_hint
@@ -32,7 +33,7 @@ class Game
 
   def save_result
     @stats.push(Statistic.generate_stats(self))
-    DbUtils.add(DB, @stats)
+    DbUtils.add(@db, @stats)
   end
 
   def won?(result)

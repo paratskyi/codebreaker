@@ -7,8 +7,24 @@ RSpec.describe Console do
   describe '#run' do
     context 'when run console' do
       it 'should show welcome message' do
+        expect(console).to receive(:show_welcome)
+        expect(console).to receive(:main_menu)
+        console.run
       end
     end
+  end
+
+  describe '#main_menu' do
+    context 'when correct user enter' do
+      it 'should call method start' do
+        expect(console).to receive(:show_msg).with(:MainMenu)
+        allow(console).to receive(:_get_name).and_return('test')
+        allow(console).to receive(:_get_difficulty_level) { DIFFICULTIES[:easy] }
+        allow(console).to receive(:user_enter).and_return('start')
+        allow(console).to receive(:loop).and_yield
+        expect(console).to receive(:start)
+        console.main_menu
+      end
   end
 
   describe '#main_menu' do
@@ -74,7 +90,7 @@ RSpec.describe Console do
       it 'should return name' do
         allow(console).to receive(:user_enter).and_return('test')
         expect(console).to receive(:show_msg).with(:EnterName)
-        expect { console.send(:_get_name) }.to_not raise_error
+        expect(console.send(:_get_name)).to eq('test')
       end
 
       it 'should return difficult hash' do
@@ -108,29 +124,57 @@ RSpec.describe Console do
     end
   end
 
-  # describe '#won' do
-  #   context 'when won' do
-  #     it 'should save result if user_enter = yes' do
-  #       console.instance_variable_set(:@game, game)
-  #       expect(console).to receive(:show_msg).with(:Won)
-  #       expect(console).to receive(:show_msg).with(:SaveResult)
-  #       allow(console).to receive(:user_enter).and_return('yes')
-  #       expect(console).to receive(:show_msg).with(:MainMenu)
-  #       console.send(:won)
-  #     end
-  #   end
-  # end
+  describe '#game_scenario' do
+    before do
+      allow(console).to receive(:loop).and_yield
+      game.instance_variable_set(:@secret_code, [1, 2, 3, 4])
+      console.instance_variable_set(:@game, game)
+      allow(console).to receive(:registration).and_return(game)
+      allow(console).to receive(:user_enter).and_return('start')
+    end
 
-  # describe '#lost' do
-  #   context 'when loss' do
-  #     it 'show loss message when loss' do
-  #       game.instance_variable_set(:@secret_code, [1, 2, 3, 4])
-  #       console.instance_variable_set(:@game, game)
-  #       expect(console).to receive(:show_msg).with(:Loss)
-  #       expect(console).to receive(:puts).with('1234')
-  #       expect(console).to receive(:show_msg).with(:MainMenu)
-  #       console.send(:lost)
-  #     end
-  #   end
-  # end
+    after do
+      console.send(:start)
+    end
+
+    context 'when correct user enter' do
+      it 'should won when user_code and secret_code to equal' do
+        allow(console).to receive(:user_enter).and_return('1234')
+        expect(console).to receive(:show_msg).with(:AccompanyingMsg)
+        expect(console).to receive(:show_msg).with(:Won)
+        expect(console).to receive(:show_msg).with(:SaveResult)
+        expect(console).to receive(:main_menu)
+      end
+
+      it 'should give hint when hint not over' do
+        allow(console).to receive(:user_enter).and_return('hint')
+        allow(game).to receive(:give_hint).and_return(1)
+        expect(console).to receive(:show_msg).with(:AccompanyingMsg)
+        expect(console).to receive(:puts).with(1)
+      end
+
+      it 'should show message "ended og hints" hint when hints is over' do
+        game.instance_variable_set(:@hints, 0)
+        allow(console).to receive(:user_enter).and_return('hint')
+        expect(console).to receive(:show_msg).with(:AccompanyingMsg)
+        expect(console).to receive(:show_msg).with(:HintsEnded)
+      end
+
+      it 'should lost when attempts ended' do
+        game.instance_variable_set(:@attempts, 0)
+        expect(console).to receive(:show_msg).with(:Loss)
+        expect(console).to receive(:puts).with(game.secret_code.join)
+        expect(console).to receive(:main_menu)
+      end
+    end
+
+    context 'when incorrect user enter' do
+      it 'should show message "invalid enter"' do
+        game.instance_variable_set(:@hints, 0)
+        allow(console).to receive(:user_enter).and_return('test')
+        expect(console).to receive(:show_msg).with(:AccompanyingMsg)
+        expect(console).to receive(:show_msg).with(:InvalidCommand)
+      end
+    end
+  end
 end

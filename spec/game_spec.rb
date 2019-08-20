@@ -1,15 +1,17 @@
 require 'spec_helper'
 
 RSpec.describe Game do
+  TEST_DB = 'spec/stats.yml'.freeze
+
   let(:game) { described_class.new('String', DIFFICULTIES[:hell]) }
 
   before do
     game.run
   end
 
-  describe '#create' do
-    context 'with all of difficulty' do
-      it do
+  describe '#initialize' do
+    context 'when correct difficulty' do
+      it 'should create game with different difficult' do
         DIFFICULTIES.each_value do |difficult|
           current_game = described_class.new('Name', difficult)
           expect(current_game.attempts).to eq difficult[:attempts]
@@ -20,39 +22,58 @@ RSpec.describe Game do
     end
   end
 
-  context '#run' do
-    it 'generates secret code' do
-      expect(game.instance_variable_get(:@secret_code)).not_to be_empty
-    end
-    it 'saves 4 numbers secret code' do
-      expect(game.instance_variable_get(:@secret_code).length).to eq 4
-    end
-    it 'saves secret code with numbers from 1 to 6' do
-      game.instance_variable_get(:@secret_code).each do |number|
-        expect(number).to be_between(1, 6).inclusive
+  describe '#game' do
+    context '#when generate secret code' do
+      it 'should not be empty' do
+        expect(game.instance_variable_get(:@secret_code)).not_to be_empty
+      end
+      it 'should saves 4 numbers secret code' do
+        expect(game.instance_variable_get(:@secret_code).length).to eq 4
+      end
+      it 'should saves secret code with numbers from 1 to 6' do
+        game.instance_variable_get(:@secret_code).each do |number|
+          expect(number).to be_between(1, 6).inclusive
+        end
       end
     end
-  end
 
-  context '#game' do
-    it 'returns result from check secret code and user code' do
-      game.secret_code = [1, 2, 3, 4]
-      expect(game.result('3124')).to eq '+---'
+    context 'when give hint' do
+      it 'should returns number wich contains secret code' do
+        expect(game.secret_code).to include(game.give_hint)
+      end
     end
 
-    it 'returns number wich contains secret code' do
-      expect(game.secret_code).to include(game.give_hint)
+    context 'when ended game' do
+      it 'should return won if result ++++' do
+        expect(game.won?('++++')).to eq true
+        expect(game.won?('++--')).to eq false
+      end
+
+      it 'should return lost if attempts == zero' do
+        expect(game.lost?).to eq false
+        game.attempts = 0
+        expect(game.lost?).to eq true
+      end
     end
 
-    it 'return won if result ++++' do
-      expect(game.won?('++++')).to eq true
-      expect(game.won?('++--')).to eq false
-    end
+    context 'when save result' do
+      before do
+        game.instance_variable_set(:@db, TEST_DB)
+      end
 
-    it 'return lost if attempts == zero' do
-      expect(game.lost?).to eq false
-      game.attempts = 0
-      expect(game.lost?).to eq true
+      after do
+        File.delete(TEST_DB) if File.exist?(TEST_DB)
+      end
+
+      it 'stats should not be empty' do
+        expect(game.stats).not_to be_empty
+      end
+
+      it 'should save statistic' do
+        game.save_result
+        expect(File.exist?(TEST_DB)).to be true
+        expect(YAML.load_file(TEST_DB)).to be_a Array
+      end
     end
   end
 end
