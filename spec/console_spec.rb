@@ -25,6 +25,7 @@ RSpec.describe Console do
         expect(console).to receive(:start)
         console.main_menu
       end
+    end
   end
 
   describe '#main_menu' do
