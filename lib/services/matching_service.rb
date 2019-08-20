@@ -21,13 +21,17 @@ module Matching
     @secret_code_clone = game.secret_code.clone
     (4 - matches(game).length).times { @spaces += ' ' }
     matches(game).each do |match|
-      if @secret_code_clone[game.user_code.index(match)] == match
+      if same_position?(game, match)
         @pluses += '+'
       else
         @minuses += '-'
       end
       remove_verified_number(match, game)
     end
+  end
+
+  def self.same_position?(game, match)
+    [game.user_code[@secret_code_clone.index(match)], @secret_code_clone[game.user_code.index(match)]].include? match
   end
 
   def self.remove_verified_number(number, game)
