@@ -3,7 +3,6 @@ require 'simplecov'
 SimpleCov.start
 
 require_relative '../dependencies.rb'
-# require 'codebreaker_paratskiy'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
