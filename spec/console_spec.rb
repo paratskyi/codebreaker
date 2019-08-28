@@ -25,7 +25,30 @@ RSpec.describe Console do
         expect(console).to receive(:start)
         console.main_menu
       end
+
+      # it 'should call method stats' do
+      #   allow(console).to receive(:user_enter).and_return('stats')
+      #   expect(console).to receive(:show_stats)
+      #   # expect(console).to receive(:main_menu)
+      #   console.main_menu
+      # end
+
+      # it 'should call method rules' do
+      #   allow(console).to receive(:user_enter).and_return('rules')
+      #   allow(console).to receive(:show_rules).and_return('rules')
+      #   expect(console).to receive(:main_menu)
+      #   console.main_menu
+      # end
     end
+
+    # context 'when incorrect user enter' do
+    #   it 'should show message "invalid enter"' do
+    #     allow(console).to receive(:user_enter).and_return('test')
+    #     expect(console).to receive(:show_msg).with(:InvalidCommand)
+    #     expect(console).to receive(:main_menu)
+    #     console.main_menu
+    #   end
+    # end
   end
 
   describe '#main_menu' do

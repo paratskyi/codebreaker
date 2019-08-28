@@ -16,7 +16,6 @@ class Console
   def main_menu
     show_main_menu
     answer = user_enter
-    # binding.pry
     return process_answer_menu(answer) if MAIN_MENU_COMMANDS.include?(answer)
 
     show_msg(:InvalidCommand)
@@ -64,8 +63,7 @@ class Console
   end
 
   def registration
-    @game = Game.new(_get_name, _get_difficulty_level)
-    @game.run
+    @game = CodebreakerParatskiy.run_game(_get_name, _get_difficulty_level)
   end
 
   def _get_name
