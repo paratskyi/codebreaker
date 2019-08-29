@@ -9,7 +9,7 @@ RSpec.describe Matching do
       values.each do |value|
         game.instance_variable_set(:@secret_code, value[:secret_code].each_char.map(&:to_i))
         game.instance_variable_set(:@user_code, value[:input].each_char.map(&:to_i))
-        expect(Matching.create_response(game)).to eq(value[:result])
+        expect(Matching.new(game).create_response).to eq(value[:result])
       end
     end
   end

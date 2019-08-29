@@ -12,3 +12,11 @@ MAIN_MENU_COMMANDS = {
   'stats' => :show_stats,
   'exit' => :exit
 }.freeze
+
+WINNING_RESULT = '++++'.freeze
+
+START_COMMAND = 'start'.freeze
+
+CONFIRM_COMMAND = 'yes'.freeze
+
+EXIT_COMMAND = 'exit'.freeze

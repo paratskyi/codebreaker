@@ -1,6 +1,9 @@
+require_relative 'services/matching_service'
+require_relative 'services/statistic_service'
 class Game
   attr_accessor :player_name, :secret_code, :user_code, :attempts, :hints, :difficulty_name
   attr_reader :stats
+
   def initialize(player_name, difficulty)
     @stats = Statistic.stats
     @player_name = player_name
@@ -10,7 +13,7 @@ class Game
     @db = DB
   end
 
-  def give_hint
+  def use_hint
     @hints -= 1
     @secret_code.sample
   end
@@ -26,9 +29,9 @@ class Game
   def result(response)
     @user_code = response.each_char.map(&:to_i)
     @attempts -= 1
-    return '++++' if @secret_code == user_code
+    return WINNING_RESULT if @secret_code == user_code
 
-    Matching.create_response(self)
+    Matching.new(self).create_response
   end
 
   def save_result
@@ -37,7 +40,7 @@ class Game
   end
 
   def won?(result)
-    result == '++++'
+    result == WINNING_RESULT
   end
 
   def lost?

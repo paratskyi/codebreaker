@@ -149,7 +149,7 @@ RSpec.describe Console do
 
       it 'should give hint when hint not over' do
         allow(console).to receive(:user_enter).and_return('hint')
-        allow(game).to receive(:give_hint).and_return(1)
+        allow(game).to receive(:use_hint).and_return(1)
         expect(console).to receive(:show_msg).with(:AccompanyingMsg)
         expect(console).to receive(:puts).with(1)
       end

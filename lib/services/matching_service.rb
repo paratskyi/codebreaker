@@ -1,41 +1,48 @@
-module Matching
-  def self.matches(game)
-    user_code_clone = game.user_code.clone
-    matches = game.secret_code.map do |number|
-      user_code_clone.find do |user_number|
-        user_code_clone.delete_at(user_code_clone.index(user_number)) if user_number == number
-      end
-    end
-    matches.compact! || matches
+class Matching
+  attr_reader :game
+
+  def initialize(game)
+    @game = game
   end
 
-  def self.create_response(game)
+  def create_response
     @pluses = ''
     @minuses = ''
-    @spaces = ''
-    check_the_code(game)
-    "#{@pluses}#{@minuses}#{@spaces}"
+    check_the_code
+    "#{@pluses}#{@minuses}"
   end
 
-  def self.check_the_code(game)
-    @secret_code_clone = game.secret_code.clone
-    (4 - matches(game).length).times { @spaces += ' ' }
-    matches(game).each do |match|
-      if same_position?(game, match)
-        @pluses += '+'
-      else
-        @minuses += '-'
+  def exact_matches
+    exact_matches = []
+    game.secret_code.each_index do |index|
+      if current_secret_number(index) == current_user_number(index)
+        exact_matches.push(current_secret_number(index))
+        remove_verified_number(current_user_number(index))
       end
-      remove_verified_number(match, game)
     end
+    exact_matches
   end
 
-  def self.same_position?(game, match)
-    [game.user_code[@secret_code_clone.index(match)], @secret_code_clone[game.user_code.index(match)]].include? match
+  def rest_matches
+    @secret_code_clone & game.user_code
   end
 
-  def self.remove_verified_number(number, game)
-    game.user_code[game.user_code.index(number)] = 0
-    @secret_code_clone[@secret_code_clone.index(number)] = 0
+  def current_secret_number(index)
+    game.secret_code.at(index)
+  end
+
+  def current_user_number(index)
+    game.user_code.at(index)
+  end
+
+  def check_the_code
+    @secret_code_clone = game.secret_code.clone
+    exact_matches.length.times { @pluses += '+' }
+    rest_matches.compact.length.times { @minuses += '-' }
+  end
+
+  def remove_verified_number(number)
+    game.user_code[game.user_code.index(number)] = nil
+    @secret_code_clone[@secret_code_clone.index(number)] = nil
   end
 end

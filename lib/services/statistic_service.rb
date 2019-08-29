@@ -1,4 +1,8 @@
-module Statistic
+require_relative '../utils/db_utils'
+require_relative '../config/constants'
+class Statistic
+  attr_reader :game
+
   def self.generate_stats(game)
     {
       name: game.player_name,

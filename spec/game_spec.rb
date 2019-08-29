@@ -39,7 +39,7 @@ RSpec.describe Game do
 
     context 'when give hint' do
       it 'should returns number wich contains secret code' do
-        expect(game.secret_code).to include(game.give_hint)
+        expect(game.secret_code).to include(game.use_hint)
       end
     end
 

@@ -1,6 +1,4 @@
-require 'pry'
-require_relative '../dependencies'
-
+require_relative 'game'
 module CodebreakerParatskiy
   def self.run_game(name, difficulty)
     game = Game.new(name, difficulty)
