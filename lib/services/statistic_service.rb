@@ -10,7 +10,8 @@ class Statistic
       attempts_total: DIFFICULTIES[game.difficulty_name.to_sym][:attempts],
       attempts_used: DIFFICULTIES[game.difficulty_name.to_sym][:attempts] - game.attempts,
       hints_total: DIFFICULTIES[game.difficulty_name.to_sym][:hints],
-      hints_used: DIFFICULTIES[game.difficulty_name.to_sym][:hints] - game.hints
+      hints_used: DIFFICULTIES[game.difficulty_name.to_sym][:hints] - game.hints,
+      date: Time.now.gmtime
     }
   end
 
