@@ -1,6 +1,8 @@
-require "codebreaker_paratskiy/version"
-
+require_relative 'game'
 module CodebreakerParatskiy
-  class Error < StandardError; end
-  # Your code goes here...
+  def self.run_game(name, difficulty)
+    game = Game.new(name, difficulty)
+    game.run
+    game
+  end
 end
