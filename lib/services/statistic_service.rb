@@ -11,7 +11,7 @@ class Statistic
       attempts_used: DIFFICULTIES[game.difficulty_name.to_sym][:attempts] - game.attempts,
       hints_total: DIFFICULTIES[game.difficulty_name.to_sym][:hints],
       hints_used: DIFFICULTIES[game.difficulty_name.to_sym][:hints] - game.hints,
-      date: Time.now.gmtime
+      date: Time.now
     }
   end
 
@@ -20,6 +20,6 @@ class Statistic
   end
 
   def self.stats
-    DbUtils.get(DB)
+    DbUtils.get(DB) || []
   end
 end

@@ -59,21 +59,30 @@ RSpec.describe Game do
     context 'when save result' do
       before do
         game.instance_variable_set(:@db, TEST_DB)
+        game.save_result
       end
 
       after do
         File.delete(TEST_DB) if File.exist?(TEST_DB)
       end
 
-      it 'stats should not be empty' do
-        expect(game.stats).not_to be_empty
-      end
-
       it 'should save statistic' do
-        game.save_result
         expect(File.exist?(TEST_DB)).to be true
         expect(YAML.load_file(TEST_DB)).to be_a Array
       end
+
+      it 'stats should not be empty' do
+        expect(game.stats).not_to be_empty
+      end
     end
   end
+
+  describe '#file' do
+    context 'when get stats' do
+      it 'should create ststs file if file does not exist' do
+        expect(Statistic.stats).to be_a Array
+      end
+    end
+  end
+  
 end
