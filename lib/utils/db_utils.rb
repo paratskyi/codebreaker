@@ -7,6 +7,7 @@ module DbUtils
   end
 
   def self.get(path)
+    add(path, []) unless File.file?(path)
     YAML.load_file(path)
   end
 end

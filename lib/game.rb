@@ -5,7 +5,7 @@ class Game
   attr_reader :stats, :secret_code_for_hint
 
   def initialize(player_name = DEFAULT_NAME, difficulty = DIFFICULTIES[:default])
-    @stats = Statistic.stats || []
+    @stats = Statistic.stats
     @player_name = player_name
     @difficulty_name = DIFFICULTIES.key(difficulty).to_s
     @attempts = difficulty[:attempts]
