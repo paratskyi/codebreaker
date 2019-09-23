@@ -4,7 +4,7 @@ class Game
   attr_accessor :player_name, :secret_code, :user_code, :attempts, :hints, :difficulty_name
   attr_reader :stats, :secret_code_for_hint
 
-  def initialize(player_name = DEFAULT_NAME, difficulty = DIFFICULTIES[:default])
+  def initialize(player_name, difficulty)
     @stats = Statistic.stats
     @player_name = player_name
     @difficulty_name = DIFFICULTIES.key(difficulty).to_s
