@@ -37,7 +37,7 @@ class Game
   end
 
   def save_result
-    @stats.push(Statistic.generate_stats(self))
+    @stats.push(Statistic.generate_stats)
     DbUtils.add(@db, stats)
   end
 

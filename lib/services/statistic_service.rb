@@ -2,7 +2,7 @@ require_relative '../utils/db_utils'
 require_relative '../config/constants'
 class Statistic
   class << self
-    def generate_stats(game)
+    def generate_stats
       {
         name: player_name,
         difficulty: difficulty_name,
