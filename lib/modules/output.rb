@@ -36,10 +36,10 @@ module Output
       row do
         column(player[:name])
         column(player[:difficulty])
-        column(player[:attempts_total])
-        column(player[:attempts_used])
-        column(player[:hints_total])
-        column(player[:hints_used])
+        column(player[:total_attempts])
+        column(player[:used_attempts])
+        column(player[:total_hints])
+        column(player[:used_hints])
       end
     end
   end

@@ -3,7 +3,7 @@ class Console
   include CodebreakerParatskiy
   include Validating
   include Output
-  attr_accessor :user_code, :game
+  attr_accessor :user_code
 
   def initialize
     @user_code = []
@@ -64,7 +64,7 @@ class Console
   end
 
   def registration
-    @game = CodebreakerParatskiy.run_game(_get_name, _get_difficulty_level)
+    CodebreakerParatskiy.run_game(_get_name, _get_difficulty_level)
   end
 
   def _get_name
@@ -80,7 +80,7 @@ class Console
   def _get_difficulty_level
     show_msg(:EnterDifficulty)
     answer = user_enter
-    return DIFFICULTIES[answer.to_sym] if DIFFICULTIES.include?(answer.to_sym)
+    return answer if DIFFICULTIES.include?(answer.to_sym)
 
     show_msg(:InvalidCommand)
     _get_difficulty_level
@@ -114,5 +114,9 @@ class Console
 
   def exit?(answer)
     answer == EXIT_COMMAND
+  end
+
+  def game
+    CurrentGame.game
   end
 end
