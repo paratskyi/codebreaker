@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    codebreaker_paratskiy (0.2.2)
+    codebreaker_paratskiy (0.2.3)
 
 GEM
   remote: https://rubygems.org/
