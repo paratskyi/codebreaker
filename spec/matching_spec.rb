@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Matching do
-  let(:game) { Game.new('String', DIFFICULTIES[:hell]) }
+  let(:game) { Game.new('String', 'hell') }
   let(:values) { DbUtils.get('spec/test.yml') }
 
   context '#matching' do

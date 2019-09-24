@@ -7,9 +7,9 @@ class Game
   def initialize(player_name, difficulty)
     @stats = Statistic.stats
     @player_name = player_name
-    @difficulty_name = DIFFICULTIES.key(difficulty).to_s
-    @attempts = difficulty[:attempts]
-    @hints = difficulty[:hints]
+    @difficulty_name = difficulty
+    @attempts = DIFFICULTIES[difficulty.to_sym][:attempts]
+    @hints = DIFFICULTIES[difficulty.to_sym][:hints]
     @db = DB
     @secret_code_for_hint = []
   end
@@ -37,7 +37,7 @@ class Game
   end
 
   def save_result
-    @stats.push(Statistic.generate_stats(self))
+    @stats.push(Statistic.generate_stats)
     DbUtils.add(@db, stats)
   end
 

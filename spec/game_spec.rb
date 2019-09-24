@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe Game do
   TEST_DB = 'spec/stats.yml'.freeze
 
-  let(:game) { described_class.new('String', DIFFICULTIES[:hell]) }
+  let(:game) { described_class.new('String', 'hell') }
 
   before do
     game.run
@@ -12,8 +12,8 @@ RSpec.describe Game do
   describe '#initialize' do
     context 'when correct difficulty' do
       it 'should create game with different difficult' do
-        DIFFICULTIES.each_value do |difficult|
-          current_game = described_class.new('Name', difficult)
+        DIFFICULTIES.each do |name, difficult|
+          current_game = described_class.new('Name', name.to_s)
           expect(current_game.attempts).to eq difficult[:attempts]
           expect(current_game.hints).to eq difficult[:hints]
           expect(current_game.difficulty_name).to eq DIFFICULTIES.key(difficult).to_s
@@ -84,5 +84,4 @@ RSpec.describe Game do
       end
     end
   end
-  
 end

@@ -1,8 +1,8 @@
 require_relative 'game'
+require_relative 'current_game'
 module CodebreakerParatskiy
-  def self.run_game(name = DEFAULT_NAME, difficulty = DIFFICULTIES[:default])
-    game = Game.new(name, difficulty)
-    game.run
-    game
+  def self.run_game(name, difficulty)
+    CurrentGame.new(Game.new(name, difficulty))
+    CurrentGame.game.run
   end
 end

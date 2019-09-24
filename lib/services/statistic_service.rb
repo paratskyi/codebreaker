@@ -1,25 +1,53 @@
 require_relative '../utils/db_utils'
 require_relative '../config/constants'
 class Statistic
-  attr_reader :game
+  class << self
+    def generate_stats
+      {
+        name: player_name,
+        difficulty: difficulty_name,
+        total_attempts: total_attempts,
+        used_attempts: used_attempts,
+        total_hints: total_hints,
+        used_hints: used_hints,
+        date: Time.now
+      }
+    end
 
-  def self.generate_stats(game)
-    {
-      name: game.player_name,
-      difficulty: game.difficulty_name,
-      attempts_total: DIFFICULTIES[game.difficulty_name.to_sym][:attempts],
-      attempts_used: DIFFICULTIES[game.difficulty_name.to_sym][:attempts] - game.attempts,
-      hints_total: DIFFICULTIES[game.difficulty_name.to_sym][:hints],
-      hints_used: DIFFICULTIES[game.difficulty_name.to_sym][:hints] - game.hints,
-      date: Time.now
-    }
-  end
+    def sort_stats
+      stats.sort_by { |player| [player[:total_attempts], player[:used_attempts], player[:used_hints]] }
+    end
 
-  def self.sort_stats
-    stats.sort_by { |player| [player[:attempts_total], player[:attempts_used], player[:hints_used]] }
-  end
+    def stats
+      DbUtils.get(DB) || []
+    end
 
-  def self.stats
-    DbUtils.get(DB) || []
+    def total_attempts
+      DIFFICULTIES[game.difficulty_name.to_sym][:attempts]
+    end
+
+    def used_attempts
+      DIFFICULTIES[game.difficulty_name.to_sym][:attempts] - game.attempts
+    end
+
+    def total_hints
+      DIFFICULTIES[game.difficulty_name.to_sym][:hints]
+    end
+
+    def used_hints
+      DIFFICULTIES[game.difficulty_name.to_sym][:hints] - game.hints
+    end
+
+    def difficulty_name
+      game.difficulty_name
+    end
+
+    def player_name
+      game.player_name
+    end
+
+    def game
+      CurrentGame.game
+    end
   end
 end

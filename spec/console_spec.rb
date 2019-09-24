@@ -2,7 +2,12 @@ require 'spec_helper'
 
 RSpec.describe Console do
   let(:console) { described_class.new }
-  let(:game) { Game.new('test', DIFFICULTIES[:easy]) }
+
+  before do
+    CodebreakerParatskiy.run_game('test', 'easy')
+  end
+
+  let(:game) { CurrentGame.game }
 
   describe '#run' do
     context 'when run console' do
@@ -32,7 +37,7 @@ RSpec.describe Console do
     context 'when correct method calling' do
       it 'should call method start' do
         allow(console).to receive(:_get_name).and_return('test')
-        allow(console).to receive(:_get_difficulty_level) { DIFFICULTIES[:easy] }
+        allow(console).to receive(:_get_difficulty_level) { 'easy' }
         allow(console).to receive(:loop).and_yield
         allow(console).to receive(:user_enter).and_return('1234')
         expect(console).to receive(:show_msg).with(:AccompanyingMsg)
@@ -97,7 +102,7 @@ RSpec.describe Console do
       it 'should return difficult hash' do
         allow(console).to receive(:user_enter).and_return('easy')
         expect(console).to receive(:show_msg).with(:EnterDifficulty)
-        expect(console.send(:_get_difficulty_level)).to eq(DIFFICULTIES[:easy])
+        expect(console.send(:_get_difficulty_level)).to eq('easy')
       end
     end
 
